@@ -61,7 +61,7 @@ A simple FastAPI-based web search API that scrapes search engines and returns cl
 
 The API will be available at `http://localhost:5000`
 
-### Using Docker
+### Using Docker Compose
 
 ```bash
 # Build and run with Docker Compose
@@ -177,7 +177,7 @@ make type-check # Type check with pyright
 make security  # Security check with bandit
 
 # Run tests
-make test
+make tests
 
 # Export dependencies (for deployment)
 make requirements
@@ -216,15 +216,67 @@ pre-commit run --all-files
 
 ## Deployment
 
-### Docker Deployment
+### Docker Compose
 
 ```bash
 # Build image
 docker build -t web-search-api .
 
 # Run container
-docker run -p 5000:5000 -e API_KEY=your-key web-search-api
+docker run -p 5000:5000 -e API_KEY=your-secret-key web-search-api
 ```
+
+### Docker Hub
+
+Pull the latest image directly from Docker Hub:
+
+```bash
+# Pull the latest image
+docker pull goldpulpy/web-search-api:latest
+
+# Run the container
+docker run -p 5000:5000 -e API_KEY=your-secret-key goldpulpy/web-search-api:latest
+```
+
+#### Docker Compose with Pre-built Image
+
+Alternatively, use Docker Compose with the pre-built image:
+
+create a `docker-compose.yml` file with the following content:
+
+```yaml
+version: "3.8"
+
+services:
+  web-search-api:
+    image: goldpulpy/web-search-api
+    container_name: web-search-api
+    environment:
+      - API_KEY=your-secret-key
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 0.5
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "5000:5000"
+```
+
+Then run:
+
+```bash
+docker-compose up -d
+```
+
+#### Docker Hub Repository
+
+The official Docker Hub repository is available at:
+
+- [Docker Hub](https://hub.docker.com/r/goldpulpy/web-search-api)
 
 ### Production Considerations
 
