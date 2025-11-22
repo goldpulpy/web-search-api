@@ -3,11 +3,12 @@
 import logging
 from urllib.parse import quote_plus
 
-from playwright.async_api import async_playwright
+from playwright.async_api import Page, async_playwright
 
 from websearchapi.engine.abc import Engine
 from websearchapi.engine.browser_config import DefaultConfig
 from websearchapi.models.search import (
+    SearchObject,
     SearchResponse,
 )
 
@@ -45,7 +46,7 @@ class Brave(Engine):
                 await pw_page.goto(search_url)
 
                 logger.debug("Waiting for search results to load")
-                await pw_page.wait_for_selector("div.results")
+                await pw_page.wait_for_selector("#results")
 
                 results = await self._parse_page(pw_page)
                 logger.info(
@@ -66,3 +67,47 @@ class Brave(Engine):
         offset = page - 1
         encoded_query = quote_plus(query)
         return f"{self.SEARCH_URL}search?q={encoded_query}&offset={offset}"
+
+    async def _parse_page(self, page: Page) -> list[SearchObject]:
+        """Parse page and extract search results."""
+        logger.debug("Starting page parsing")
+        results = []
+
+        search_items = await page.query_selector_all("div.result-content")
+        logger.debug("Found %s search result items", len(search_items))
+
+        for index, item in enumerate(search_items):
+            title_elem = await item.query_selector("div.title")
+            link_elem = await item.query_selector("a")
+            snippet_elem = await item.query_selector("div.content")
+
+            if title_elem and link_elem:
+                title = (await title_elem.inner_text()).strip()
+                link = await link_elem.get_attribute("href")
+                snippet = (
+                    (await snippet_elem.inner_text()).strip()
+                    if snippet_elem
+                    else ""
+                )
+
+                if link:
+                    results.append(
+                        SearchObject(
+                            title=title,
+                            link=link,
+                            snippet=snippet,
+                        ),
+                    )
+                else:
+                    logger.debug(
+                        "Skipping result %s: no link found",
+                        index + 1,
+                    )
+
+            else:
+                logger.debug(
+                    "Skipping result %s: missing title or link elements",
+                    index + 1,
+                )
+
+        return results
