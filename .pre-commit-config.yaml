@@ -1,0 +1,46 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ["--maxkb=1000"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.6
+    hooks:
+      - id: ruff-format
+        name: ruff format
+        files: ^src/
+
+      - id: ruff
+        name: ruff check
+        files: ^src/
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.9.1
+    hooks:
+      - id: bandit
+        name: bandit security check
+        args: ["-c", "pyproject.toml"]
+        files: ^src/
+        additional_dependencies: ["bandit[toml]"]
+
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.407
+    hooks:
+      - id: pyright
+        name: pyright type-check
+        files: ^src/
+        pass_filenames: false
+        always_run: true
+        additional_dependencies:
+          [
+            "fastapi>=0.121.3",
+            "playwright>=1.56.0",
+            "pydantic-settings>=2.12.0",
+            "scalar-fastapi>=1.4.3",
+            "uvicorn>=0.38.0",
+          ]

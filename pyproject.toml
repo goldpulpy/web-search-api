@@ -1,0 +1,54 @@
+[project]
+name = "websearchapi"
+version = "1.0.0"
+description = "Web Search API that scrapes search engines and returns clean JSON data"
+readme = "README.md"
+license = {text = "MIT"}
+keywords = ["web-scraping", "web-search"]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.121.3",
+    "playwright>=1.56.0",
+    "pydantic-settings>=2.12.0",
+    "scalar-fastapi>=1.4.3",
+    "uvicorn>=0.38.0",
+]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.9.1",
+    "pre-commit>=4.4.0",
+    "pyright>=1.1.407",
+    "pytest>=9.0.1",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.5",
+]
+
+
+[tool.ruff]
+src = ["src"]
+exclude = [
+    "tests",
+    ".git",
+    "__pycache__",
+    "build",
+    "dist"
+]
+
+line-length = 79
+fix = true
+unsafe-fixes = true
+
+[tool.ruff.lint]
+select = ["ALL"]
+
+[tool.pyright]
+include = ["src"]
+exclude = [
+    "**/__pycache__",
+    ".venv",
+]
+pythonVersion = "3.12"
+typeCheckingMode = "basic"
+reportMissingTypeStubs = false
