@@ -25,7 +25,7 @@ A simple FastAPI-based web search API that scrapes search engines and returns cl
 
 ## Supported Search Engines
 
-- **DuckDuckGo**: DuckDuckGo search engine
+- [DuckDuckGo](https://duckduckgo.com)
 
 ## Quick Start
 
