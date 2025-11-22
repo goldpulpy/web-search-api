@@ -7,9 +7,9 @@ class DefaultConfig:
     """Default config for engines."""
 
     user_agent = (
-        "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) "
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/142.0.0.0 Mobile Safari/537.36"
+        "Chrome/131.0.0.0 Safari/537.36"
     )
     timezone_id = "America/New_York"
     locale = "en-US"
@@ -19,4 +19,26 @@ class DefaultConfig:
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
         "--disable-gpu",
+        "--disable-infobars",
     ]
+
+    init_script: ClassVar = """
+Object.defineProperty(navigator, 'webdriver', {
+    get: () => undefined
+});
+
+Object.defineProperty(navigator, 'plugins', {
+    get: () => [1, 2, 3, 4, 5]
+});
+
+window.chrome = {
+    runtime: {}
+};
+
+Object.defineProperty(navigator, 'permissions', {
+    get: () => ({
+        query: () => Promise.resolve({ state: 'prompt' })
+    })
+});
+
+"""

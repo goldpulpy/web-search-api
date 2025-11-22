@@ -40,6 +40,7 @@ class Brave(Engine):
             )
 
             pw_page = await pw_context.new_page()
+            await pw_page.add_init_script(DefaultConfig.init_script)
 
             try:
                 search_url = self._build_search_url(query, page)
