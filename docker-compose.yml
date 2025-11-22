@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  websearche-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: web-search-api
+    container_name: web-search-api
+    env_file:
+      - .env
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 0.5
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "${CONTAINER_PORT:-5000}:${PORT:-5000}"
