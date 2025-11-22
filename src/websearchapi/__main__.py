@@ -1,12 +1,16 @@
 """Entry point for the Web Search API (FastAPI)."""
 
 import logging
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+from typing import Any
 
 import uvicorn
 from fastapi import FastAPI
 
 from websearchapi import api
 from websearchapi.api import docs, health, middlewares
+from websearchapi.engine.browser import BrowserManager
 from websearchapi.shared import config
 
 logging.basicConfig(
@@ -15,6 +19,16 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:  # noqa: ARG001
+    """Application lifespan."""
+    yield
+    await BrowserManager.close()
+
+
+app = FastAPI(lifespan=lifespan)
 
 app = FastAPI(docs_url=None, redoc_url=None)
 

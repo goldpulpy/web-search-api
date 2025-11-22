@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from websearchapi.engine.brave import Brave
-from websearchapi.engine.browser_config import DefaultConfig
+from websearchapi.engine.browser import DefaultConfig
 from websearchapi.models.search import SearchObject, SearchResponse
 
 

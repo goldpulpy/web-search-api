@@ -3,10 +3,10 @@
 import logging
 from urllib.parse import quote_plus
 
-from playwright.async_api import Page, async_playwright
+from playwright.async_api import Page
 
 from websearchapi.engine.abc import Engine
-from websearchapi.engine.browser_config import DefaultConfig
+from websearchapi.engine.browser import BrowserManager, DefaultConfig
 from websearchapi.models.search import (
     SearchObject,
     SearchResponse,
@@ -25,43 +25,37 @@ class Brave(Engine):
         """Perform search using Brave."""
         logger.info("Starting Brave search for query: '%s'", query)
 
-        async with async_playwright() as p:
-            logger.debug("Launching Chromium browser")
-            pw_browser = await p.chromium.launch(
-                channel="chrome",
-                headless=True,
-                args=DefaultConfig.args,
+        pw_browser = await BrowserManager.get_browser()
+
+        pw_context = await pw_browser.new_context(
+            user_agent=DefaultConfig.user_agent,
+            locale=DefaultConfig.locale,
+            timezone_id=DefaultConfig.timezone_id,
+        )
+
+        pw_page = await pw_context.new_page()
+        await pw_page.add_init_script(DefaultConfig.init_script)
+
+        try:
+            search_url = self._build_search_url(query, page)
+            await pw_page.goto(search_url)
+
+            logger.debug("Waiting for search results to load")
+            await pw_page.wait_for_selector("#results")
+
+            results = await self._parse_page(pw_page)
+            logger.info(
+                "Found %s search results for query: '%s'",
+                len(results),
+                query,
             )
 
-            pw_context = await pw_browser.new_context(
-                user_agent=DefaultConfig.user_agent,
-                locale=DefaultConfig.locale,
-                timezone_id=DefaultConfig.timezone_id,
-            )
+        finally:
+            logger.debug("Closing browser context and browser")
+            await pw_context.close()
+            await pw_browser.close()
 
-            pw_page = await pw_context.new_page()
-            await pw_page.add_init_script(DefaultConfig.init_script)
-
-            try:
-                search_url = self._build_search_url(query, page)
-                await pw_page.goto(search_url)
-
-                logger.debug("Waiting for search results to load")
-                await pw_page.wait_for_selector("#results")
-
-                results = await self._parse_page(pw_page)
-                logger.info(
-                    "Found %s search results for query: '%s'",
-                    len(results),
-                    query,
-                )
-
-            finally:
-                logger.debug("Closing browser context and browser")
-                await pw_context.close()
-                await pw_browser.close()
-
-            return SearchResponse(engine=self.NAME, result=results, page=page)
+        return SearchResponse(engine=self.NAME, result=results, page=page)
 
     def _build_search_url(self, query: str, page: int = 1) -> str:
         """Build search URL."""

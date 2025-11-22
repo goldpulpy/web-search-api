@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 
 import pytest
 
-from websearchapi.engine.browser_config import DefaultConfig
+from websearchapi.engine.browser import DefaultConfig
 from websearchapi.engine.duckduckgo import DuckDuckGo
 from websearchapi.models.search import SearchObject, SearchResponse
 
