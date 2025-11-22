@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  websearche-api:
+  web-search-api:
     build:
       context: .
       dockerfile: Dockerfile
