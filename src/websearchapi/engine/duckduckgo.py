@@ -19,7 +19,6 @@ class DuckDuckGo(Engine):
     """DuckDuckGo search engine."""
 
     NAME = "DuckDuckGo"
-    BASE_URL = "https://duckduckgo.com"
     SEARCH_URL = "https://duckduckgo.com/html/"
 
     async def search(self, query: str, page: int = 1) -> SearchResponse:
@@ -43,7 +42,7 @@ class DuckDuckGo(Engine):
             pw_page = await pw_context.new_page()
 
             try:
-                search_url = self.build_search_url(query, page)
+                search_url = self._build_search_url(query, page)
                 await pw_page.goto(search_url)
 
                 logger.debug("Waiting for search results to load")
@@ -63,7 +62,7 @@ class DuckDuckGo(Engine):
 
             return SearchResponse(engine=self.NAME, result=results, page=page)
 
-    def build_search_url(self, query: str, page: int = 1) -> str:
+    def _build_search_url(self, query: str, page: int = 1) -> str:
         """Build search URL."""
         offset = (page - 1) * 10
         encoded_query = quote_plus(query)

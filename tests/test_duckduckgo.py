@@ -22,7 +22,7 @@ class TestDuckDuckGoURLBuilding:
         """Test building search URL with basic query."""
         query = "test query"
         expected_url = "https://duckduckgo.com/html/?q=test+query&s=0&o=json&dc=1&api=d.js"
-        result = self.engine.build_search_url(query)
+        result = self.engine._build_search_url(query)
         assert result == expected_url
 
     def test_build_search_url_with_page(self) -> None:
@@ -30,27 +30,27 @@ class TestDuckDuckGoURLBuilding:
         query = "python programming"
         page = 2
         expected_url = "https://duckduckgo.com/html/?q=python+programming&s=10&o=json&dc=11&api=d.js"
-        result = self.engine.build_search_url(query, page)
+        result = self.engine._build_search_url(query, page)
         assert result == expected_url
 
     def test_build_search_url_with_special_chars(self) -> None:
         """Test building search URL with special characters."""
         query = "test@email.com & symbols"
         expected_url = "https://duckduckgo.com/html/?q=test%40email.com+%26+symbols&s=0&o=json&dc=1&api=d.js"
-        result = self.engine.build_search_url(query)
+        result = self.engine._build_search_url(query)
         assert result == expected_url
 
     def test_build_search_url_page_1(self) -> None:
         """Test building search URL for page 1 (default)."""
         query = "test"
-        result = self.engine.build_search_url(query, page=1)
+        result = self.engine._build_search_url(query, page=1)
         assert "s=0" in result
         assert "dc=1" in result
 
     def test_build_search_url_page_3(self) -> None:
         """Test building search URL for page 3."""
         query = "test"
-        result = self.engine.build_search_url(query, page=3)
+        result = self.engine._build_search_url(query, page=3)
         assert "s=20" in result
         assert "dc=21" in result
 
@@ -321,7 +321,7 @@ class TestDuckDuckGoSearch:
                 result = await self.engine.search(query, page)
 
             assert result.page == page
-            expected_url = self.engine.build_search_url(query, page)
+            expected_url = self.engine._build_search_url(query, page)
             mock_page.goto.assert_called_once_with(expected_url)
 
     @pytest.mark.asyncio
