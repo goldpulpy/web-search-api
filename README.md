@@ -92,7 +92,7 @@ Get list of available search engines.
 
 ```json
 {
-  "engines": ["Engine name", ...]
+  "engines": ["engine_name"]
 }
 ```
 
@@ -106,7 +106,7 @@ Search for a query using a specific search engine.
 
 ```json
 {
-  "engine": "Engine name",
+  "engine": "engine_name",
   "query": "Query to search",
   "page": 1
 }
@@ -116,16 +116,16 @@ Search for a query using a specific search engine.
 
 ```json
 {
-  "engine": "Engine name",
+  "engine": "engine_name",
   "result": [
     {
       "title": "Title of the result",
       "link": "Link to the result",
       "snippet": "Snippet of the result"
-    },
-    ...
+    }
   ],
-  "page": 1
+  "page": 1,
+  "count": 1
 }
 ```
 

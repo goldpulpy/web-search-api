@@ -62,6 +62,7 @@ class DuckDuckGo(Engine):
             engine=self.NAME,
             result=results,
             page=request.page,
+            count=len(results),
         )
 
     def _build_search_url(self, query: str, page: int = 1) -> str:

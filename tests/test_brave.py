@@ -7,7 +7,11 @@ import pytest
 
 from websearchapi.core.browser import DefaultConfig
 from websearchapi.core.engines.brave import Brave
-from websearchapi.models.search import SearchObject, SearchRequest, SearchResponse
+from websearchapi.models.search import (
+    SearchObject,
+    SearchRequest,
+    SearchResponse,
+)
 
 
 class TestBraveURLBuilding:
@@ -200,7 +204,11 @@ class TestBraveSearch:
     @pytest.mark.asyncio
     async def test_search_successful(self) -> None:
         """Test successful search operation."""
-        request = SearchRequest(engine=self.engine.NAME, query="test query", page=1)
+        request = SearchRequest(
+            engine=self.engine.NAME,
+            query="test query",
+            page=1,
+        )
 
         with patch(
             "websearchapi.core.engines.brave.BrowserManager.get_browser",
@@ -244,7 +252,11 @@ class TestBraveSearch:
     @pytest.mark.asyncio
     async def test_search_with_different_page(self) -> None:
         """Test search with different page number."""
-        request = SearchRequest(engine=self.engine.NAME, query="test query", page=2)
+        request = SearchRequest(
+            engine=self.engine.NAME,
+            query="test query",
+            page=2,
+        )
 
         with patch(
             "websearchapi.core.engines.brave.BrowserManager.get_browser",
@@ -265,13 +277,20 @@ class TestBraveSearch:
                 result = await self.engine.search(request)
 
             assert result.page == request.page
-            expected_url = self.engine._build_search_url(request.query, request.page)
+            expected_url = self.engine._build_search_url(
+                request.query,
+                request.page,
+            )
             mock_page.goto.assert_called_once_with(expected_url)
 
     @pytest.mark.asyncio
     async def test_search_browser_configuration(self) -> None:
         """Test browser configuration during search."""
-        request = SearchRequest(engine=self.engine.NAME, query="test query", page=2)
+        request = SearchRequest(
+            engine=self.engine.NAME,
+            query="test query",
+            page=2,
+        )
 
         with patch(
             "websearchapi.core.engines.brave.BrowserManager.get_browser",
@@ -300,7 +319,11 @@ class TestBraveSearch:
     @pytest.mark.asyncio
     async def test_search_exception_handling(self) -> None:
         """Test that browser is closed even when exception occurs."""
-        request = SearchRequest(engine=self.engine.NAME, query="test query", page=1)
+        request = SearchRequest(
+            engine=self.engine.NAME,
+            query="test query",
+            page=1,
+        )
 
         with patch(
             "websearchapi.core.engines.brave.BrowserManager.get_browser",
