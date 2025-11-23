@@ -56,7 +56,6 @@ class Yahoo(Engine):
         finally:
             logger.debug("Closing browser context and browser")
             await pw_context.close()
-            await pw_browser.close()
 
         return SearchResponse(
             engine=self.NAME,
