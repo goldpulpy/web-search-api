@@ -14,14 +14,15 @@ class SearchRequest(BaseModel):
 class SearchObject(BaseModel):
     """Search object."""
 
-    title: str
-    link: str
-    snippet: str
+    title: str = Field(description="Result title")
+    link: str = Field(description="Result link")
+    snippet: str = Field(description="Result snippet")
 
 
 class SearchResponse(BaseModel):
     """Search response."""
 
-    engine: str
-    result: list[SearchObject]
-    page: int
+    engine: str = Field(description="Engine name")
+    result: list[SearchObject] = Field(description="Search results")
+    page: int = Field(description="Current page number")
+    count: int = Field(description="Number of results")

@@ -133,7 +133,6 @@ class TestDuckDuckGoPageParsing:
     @pytest.mark.asyncio
     async def test_parse_page_with_results(self) -> None:
         """Test parsing page with search results."""
-        # Create mock result items
         mock_item1 = AsyncMock()
         mock_title_link1 = AsyncMock()
         mock_snippet1 = AsyncMock()
