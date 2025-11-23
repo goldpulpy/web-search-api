@@ -5,8 +5,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from websearchapi.engine.brave import Brave
-from websearchapi.engine.browser import DefaultConfig
+from websearchapi.core.browser import DefaultConfig
+from websearchapi.core.engines.brave import Brave
 from websearchapi.models.search import SearchObject, SearchResponse
 
 
@@ -205,7 +205,7 @@ class TestBraveSearch:
         page = 1
 
         with patch(
-            "websearchapi.engine.brave.BrowserManager.get_browser",
+            "websearchapi.core.engines.brave.BrowserManager.get_browser",
         ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
@@ -250,7 +250,7 @@ class TestBraveSearch:
         page = 2
 
         with patch(
-            "websearchapi.engine.brave.BrowserManager.get_browser",
+            "websearchapi.core.engines.brave.BrowserManager.get_browser",
         ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
@@ -277,7 +277,7 @@ class TestBraveSearch:
         query = "test query"
 
         with patch(
-            "websearchapi.engine.brave.BrowserManager.get_browser",
+            "websearchapi.core.engines.brave.BrowserManager.get_browser",
         ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
@@ -306,7 +306,7 @@ class TestBraveSearch:
         query = "test query"
 
         with patch(
-            "websearchapi.engine.brave.BrowserManager.get_browser",
+            "websearchapi.core.engines.brave.BrowserManager.get_browser",
         ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()

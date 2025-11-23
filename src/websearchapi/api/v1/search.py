@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException, status
 
-from websearchapi.engine import get_engine
+from websearchapi.core import get_engine
 from websearchapi.models.search import SearchRequest, SearchResponse
 
 router = APIRouter()

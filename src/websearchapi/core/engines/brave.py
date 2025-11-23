@@ -5,8 +5,8 @@ from urllib.parse import quote_plus
 
 from playwright.async_api import Page
 
-from websearchapi.engine.abc import Engine
-from websearchapi.engine.browser import BrowserManager, DefaultConfig
+from websearchapi.core.browser import BrowserManager, DefaultConfig
+from websearchapi.core.engines.abc import Engine
 from websearchapi.models.search import (
     SearchObject,
     SearchResponse,

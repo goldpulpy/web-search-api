@@ -6,8 +6,8 @@ from urllib.parse import urlencode
 
 import pytest
 
-from websearchapi.engine.browser import DefaultConfig
-from websearchapi.engine.duckduckgo import DuckDuckGo
+from websearchapi.core.browser import DefaultConfig
+from websearchapi.core.engines.duckduckgo import DuckDuckGo
 from websearchapi.models.search import SearchObject, SearchResponse
 
 
@@ -254,7 +254,7 @@ class TestDuckDuckGoSearch:
         page = 1
 
         with patch(
-            "websearchapi.engine.duckduckgo.BrowserManager.get_browser",
+            "websearchapi.core.engines.duckduckgo.BrowserManager.get_browser",
         ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
@@ -298,7 +298,7 @@ class TestDuckDuckGoSearch:
         page = 2
 
         with patch(
-            "websearchapi.engine.duckduckgo.BrowserManager.get_browser",
+            "websearchapi.core.engines.duckduckgo.BrowserManager.get_browser",
         ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
@@ -325,7 +325,7 @@ class TestDuckDuckGoSearch:
         query = "test query"
 
         with patch(
-            "websearchapi.engine.duckduckgo.BrowserManager.get_browser",
+            "websearchapi.core.engines.duckduckgo.BrowserManager.get_browser",
         ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
@@ -354,7 +354,7 @@ class TestDuckDuckGoSearch:
         query = "test query"
 
         with patch(
-            "websearchapi.engine.duckduckgo.BrowserManager.get_browser",
+            "websearchapi.core.engines.duckduckgo.BrowserManager.get_browser",
         ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()

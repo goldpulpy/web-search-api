@@ -10,7 +10,7 @@ from fastapi import FastAPI
 
 from websearchapi import api
 from websearchapi.api import docs, health, middlewares
-from websearchapi.engine.browser import BrowserManager
+from websearchapi.core.browser import BrowserManager
 from websearchapi.shared import config
 
 logging.basicConfig(
