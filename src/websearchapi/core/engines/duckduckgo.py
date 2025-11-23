@@ -60,6 +60,7 @@ class DuckDuckGo(Engine):
 
         return SearchResponse(
             engine=self.NAME,
+            search_url=search_url,
             result=results,
             page=request.page,
             count=len(results),

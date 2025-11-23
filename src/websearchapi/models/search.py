@@ -23,6 +23,7 @@ class SearchResponse(BaseModel):
     """Search response."""
 
     engine: str = Field(description="Engine name")
+    search_url: str = Field(description="Search URL")
     result: list[SearchObject] = Field(description="Search results")
     page: int = Field(description="Current page number")
     count: int = Field(description="Number of results")

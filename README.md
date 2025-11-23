@@ -118,6 +118,7 @@ Search for a query using a specific search engine.
 ```json
 {
   "engine": "engine_name",
+  "search_url": "Search URL",
   "result": [
     {
       "title": "Title of the result",
