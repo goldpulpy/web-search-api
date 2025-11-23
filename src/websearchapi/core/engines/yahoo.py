@@ -74,8 +74,12 @@ class Yahoo(Engine):
     async def _skip_banner(self, page: Page) -> None:
         """Skip banner."""
         logger.debug("Skipping banner")
-        await page.wait_for_selector("button.reject-all")
-        await page.click("button.reject-all")
+        try:
+            await page.wait_for_selector("button.reject-all")
+            await page.click("button.reject-all")
+
+        except Exception as e:  # noqa: BLE001
+            logger.debug("Banner not found or already skipped: %s", e)
 
     async def _parse_page(self, page: Page) -> list[SearchObject]:
         """Parse page and extract search results."""
