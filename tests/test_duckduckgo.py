@@ -254,15 +254,13 @@ class TestDuckDuckGoSearch:
         page = 1
 
         with patch(
-            "websearchapi.engine.duckduckgo.async_playwright",
-        ) as mock_playwright:
-            mock_p = AsyncMock()
+            "websearchapi.engine.duckduckgo.BrowserManager.get_browser",
+        ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
 
-            mock_playwright.return_value.__aenter__.return_value = mock_p
-            mock_p.chromium.launch.return_value = mock_browser
+            mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
 
@@ -292,7 +290,6 @@ class TestDuckDuckGoSearch:
             assert result.result[1].title == "Test Result 2"
 
             mock_context.close.assert_called_once()
-            mock_browser.close.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_search_with_different_page(self) -> None:
@@ -301,15 +298,13 @@ class TestDuckDuckGoSearch:
         page = 2
 
         with patch(
-            "websearchapi.engine.duckduckgo.async_playwright",
-        ) as mock_playwright:
-            mock_p = AsyncMock()
+            "websearchapi.engine.duckduckgo.BrowserManager.get_browser",
+        ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
 
-            mock_playwright.return_value.__aenter__.return_value = mock_p
-            mock_p.chromium.launch.return_value = mock_browser
+            mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
 
@@ -322,7 +317,7 @@ class TestDuckDuckGoSearch:
 
             assert result.page == page
             expected_url = self.engine._build_search_url(query, page)
-            mock_page.goto.assert_called_once_with(expected_url)
+            mock_page.goto.assert_called_once_with(expected_url, timeout=30000)
 
     @pytest.mark.asyncio
     async def test_search_browser_configuration(self) -> None:
@@ -330,15 +325,13 @@ class TestDuckDuckGoSearch:
         query = "test query"
 
         with patch(
-            "websearchapi.engine.duckduckgo.async_playwright",
-        ) as mock_playwright:
-            mock_p = AsyncMock()
+            "websearchapi.engine.duckduckgo.BrowserManager.get_browser",
+        ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
 
-            mock_playwright.return_value.__aenter__.return_value = mock_p
-            mock_p.chromium.launch.return_value = mock_browser
+            mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
 
@@ -348,12 +341,6 @@ class TestDuckDuckGoSearch:
                 mock_parse.return_value = []
 
                 await self.engine.search(query)
-
-            mock_p.chromium.launch.assert_called_once_with(
-                channel="chrome",
-                headless=True,
-                args=DefaultConfig.args,
-            )
 
             mock_browser.new_context.assert_called_once_with(
                 user_agent=DefaultConfig.user_agent,
@@ -367,15 +354,13 @@ class TestDuckDuckGoSearch:
         query = "test query"
 
         with patch(
-            "websearchapi.engine.duckduckgo.async_playwright",
-        ) as mock_playwright:
-            mock_p = AsyncMock()
+            "websearchapi.engine.duckduckgo.BrowserManager.get_browser",
+        ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
 
-            mock_playwright.return_value.__aenter__.return_value = mock_p
-            mock_p.chromium.launch.return_value = mock_browser
+            mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
             mock_page.goto.side_effect = Exception("Navigation failed")
@@ -384,4 +369,3 @@ class TestDuckDuckGoSearch:
                 await self.engine.search(query)
 
             mock_context.close.assert_called_once()
-            mock_browser.close.assert_called_once()

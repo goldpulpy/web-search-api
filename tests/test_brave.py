@@ -205,15 +205,13 @@ class TestBraveSearch:
         page = 1
 
         with patch(
-            "websearchapi.engine.brave.async_playwright",
-        ) as mock_playwright:
-            mock_p = AsyncMock()
+            "websearchapi.engine.brave.BrowserManager.get_browser",
+        ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
 
-            mock_playwright.return_value.__aenter__.return_value = mock_p
-            mock_p.chromium.launch.return_value = mock_browser
+            mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
 
@@ -252,15 +250,13 @@ class TestBraveSearch:
         page = 2
 
         with patch(
-            "websearchapi.engine.brave.async_playwright",
-        ) as mock_playwright:
-            mock_p = AsyncMock()
+            "websearchapi.engine.brave.BrowserManager.get_browser",
+        ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
 
-            mock_playwright.return_value.__aenter__.return_value = mock_p
-            mock_p.chromium.launch.return_value = mock_browser
+            mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
 
@@ -281,15 +277,13 @@ class TestBraveSearch:
         query = "test query"
 
         with patch(
-            "websearchapi.engine.brave.async_playwright",
-        ) as mock_playwright:
-            mock_p = AsyncMock()
+            "websearchapi.engine.brave.BrowserManager.get_browser",
+        ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
 
-            mock_playwright.return_value.__aenter__.return_value = mock_p
-            mock_p.chromium.launch.return_value = mock_browser
+            mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
 
@@ -299,12 +293,6 @@ class TestBraveSearch:
                 mock_parse.return_value = []
 
                 await self.engine.search(query)
-
-            mock_p.chromium.launch.assert_called_once_with(
-                channel="chrome",
-                headless=True,
-                args=DefaultConfig.args,
-            )
 
             mock_browser.new_context.assert_called_once_with(
                 user_agent=DefaultConfig.user_agent,
@@ -318,15 +306,13 @@ class TestBraveSearch:
         query = "test query"
 
         with patch(
-            "websearchapi.engine.brave.async_playwright",
-        ) as mock_playwright:
-            mock_p = AsyncMock()
+            "websearchapi.engine.brave.BrowserManager.get_browser",
+        ) as mock_get_browser:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
 
-            mock_playwright.return_value.__aenter__.return_value = mock_p
-            mock_p.chromium.launch.return_value = mock_browser
+            mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
             mock_page.goto.side_effect = Exception("Navigation failed")
