@@ -152,7 +152,9 @@ web-search-api/
 │   ├── api/               # API routes and middleware
 │   │   ├── v1/            # API version 1 endpoints
 │   │   └── middlewares/   # Authentication middleware
-│   ├── engine/            # Search engine implementations
+│   ├── core/              # Core application logic
+│   │   ├── engines/       # Search engines
+│   │   └── browser/       # Browser management
 │   ├── models/            # Pydantic models
 │   └── shared/            # Configuration and utilities
 ├── tests/                 # Unit tests
