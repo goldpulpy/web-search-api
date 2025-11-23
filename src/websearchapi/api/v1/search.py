@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException, status
 from websearchapi.core import get_engine
 from websearchapi.models.search import SearchRequest, SearchResponse
 
-router = APIRouter()
+router = APIRouter(tags=["Search"])
 
 
 @router.post(
@@ -16,8 +16,8 @@ router = APIRouter()
     response_description="Search results",
     responses={
         200: {"description": "Success", "model": SearchRequest},
+        401: {"description": "Invalid API key"},
         404: {"description": "Engine not found"},
-        491: {"description": "Invalid API key"},
         500: {"description": "Internal server error"},
     },
 )
