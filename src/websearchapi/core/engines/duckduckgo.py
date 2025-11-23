@@ -9,6 +9,7 @@ from websearchapi.core.browser import BrowserManager, DefaultConfig
 from websearchapi.core.engines.abc import Engine
 from websearchapi.models.search import (
     SearchObject,
+    SearchRequest,
     SearchResponse,
 )
 
@@ -21,9 +22,12 @@ class DuckDuckGo(Engine):
     NAME = "DuckDuckGo"
     SEARCH_URL = "https://duckduckgo.com/html/"
 
-    async def search(self, query: str, page: int = 1) -> SearchResponse:
+    async def search(self, request: SearchRequest) -> SearchResponse:
         """Perform search using DuckDuckGo."""
-        logger.info("Starting DuckDuckGo search for query: '%s'", query)
+        logger.info(
+            "Starting DuckDuckGo search for query: '%s'",
+            request.query,
+        )
 
         browser = await BrowserManager.get_browser()
 
@@ -37,7 +41,7 @@ class DuckDuckGo(Engine):
         await pw_page.add_init_script(DefaultConfig.init_script)
 
         try:
-            search_url = self._build_search_url(query, page)
+            search_url = self._build_search_url(request.query, request.page)
             await pw_page.goto(search_url, timeout=30000)
 
             logger.debug("Waiting for search results to load")
@@ -47,14 +51,18 @@ class DuckDuckGo(Engine):
             logger.info(
                 "Found %s search results for query: '%s'",
                 len(results),
-                query,
+                request.query,
             )
 
         finally:
             logger.debug("Closing browser context")
             await pw_context.close()
 
-        return SearchResponse(engine=self.NAME, result=results, page=page)
+        return SearchResponse(
+            engine=self.NAME,
+            result=results,
+            page=request.page,
+        )
 
     def _build_search_url(self, query: str, page: int = 1) -> str:
         """Build search URL."""

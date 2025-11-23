@@ -9,6 +9,7 @@ from websearchapi.core.browser import BrowserManager, DefaultConfig
 from websearchapi.core.engines.abc import Engine
 from websearchapi.models.search import (
     SearchObject,
+    SearchRequest,
     SearchResponse,
 )
 
@@ -21,9 +22,9 @@ class Brave(Engine):
     NAME = "Brave"
     SEARCH_URL = "https://search.brave.com/"
 
-    async def search(self, query: str, page: int = 1) -> SearchResponse:
+    async def search(self, request: SearchRequest) -> SearchResponse:
         """Perform search using Brave."""
-        logger.info("Starting Brave search for query: '%s'", query)
+        logger.info("Starting Brave search for query: '%s'", request.query)
 
         pw_browser = await BrowserManager.get_browser()
 
@@ -37,7 +38,7 @@ class Brave(Engine):
         await pw_page.add_init_script(DefaultConfig.init_script)
 
         try:
-            search_url = self._build_search_url(query, page)
+            search_url = self._build_search_url(request.query, request.page)
             await pw_page.goto(search_url)
 
             logger.debug("Waiting for search results to load")
@@ -47,7 +48,7 @@ class Brave(Engine):
             logger.info(
                 "Found %s search results for query: '%s'",
                 len(results),
-                query,
+                request.query,
             )
 
         finally:
@@ -55,7 +56,11 @@ class Brave(Engine):
             await pw_context.close()
             await pw_browser.close()
 
-        return SearchResponse(engine=self.NAME, result=results, page=page)
+        return SearchResponse(
+            engine=self.NAME,
+            result=results,
+            page=request.page,
+        )
 
     def _build_search_url(self, query: str, page: int = 1) -> str:
         """Build search URL."""

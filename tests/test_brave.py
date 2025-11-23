@@ -7,7 +7,7 @@ import pytest
 
 from websearchapi.core.browser import DefaultConfig
 from websearchapi.core.engines.brave import Brave
-from websearchapi.models.search import SearchObject, SearchResponse
+from websearchapi.models.search import SearchObject, SearchRequest, SearchResponse
 
 
 class TestBraveURLBuilding:
@@ -201,8 +201,7 @@ class TestBraveSearch:
     @pytest.mark.asyncio
     async def test_search_successful(self) -> None:
         """Test successful search operation."""
-        query = "test query"
-        page = 1
+        request = SearchRequest(engine=self.engine.NAME, query="test query", page=1)
 
         with patch(
             "websearchapi.core.engines.brave.BrowserManager.get_browser",
@@ -231,11 +230,11 @@ class TestBraveSearch:
                     ),
                 ]
 
-                result = await self.engine.search(query, page)
+                result = await self.engine.search(request)
 
             assert isinstance(result, SearchResponse)
             assert result.engine == "Brave"
-            assert result.page == page
+            assert result.page == request.page
             assert len(result.result) == 2
             assert result.result[0].title == "Test Result 1"
             assert result.result[1].title == "Test Result 2"
@@ -246,8 +245,7 @@ class TestBraveSearch:
     @pytest.mark.asyncio
     async def test_search_with_different_page(self) -> None:
         """Test search with different page number."""
-        query = "test query"
-        page = 2
+        request = SearchRequest(engine=self.engine.NAME, query="test query", page=2)
 
         with patch(
             "websearchapi.core.engines.brave.BrowserManager.get_browser",
@@ -265,16 +263,16 @@ class TestBraveSearch:
             with patch.object(self.engine, "_parse_page") as mock_parse:
                 mock_parse.return_value = []
 
-                result = await self.engine.search(query, page)
+                result = await self.engine.search(request)
 
-            assert result.page == page
-            expected_url = self.engine._build_search_url(query, page)
+            assert result.page == request.page
+            expected_url = self.engine._build_search_url(request.query, request.page)
             mock_page.goto.assert_called_once_with(expected_url)
 
     @pytest.mark.asyncio
     async def test_search_browser_configuration(self) -> None:
         """Test browser configuration during search."""
-        query = "test query"
+        request = SearchRequest(engine=self.engine.NAME, query="test query", page=2)
 
         with patch(
             "websearchapi.core.engines.brave.BrowserManager.get_browser",
@@ -292,7 +290,7 @@ class TestBraveSearch:
             with patch.object(self.engine, "_parse_page") as mock_parse:
                 mock_parse.return_value = []
 
-                await self.engine.search(query)
+                await self.engine.search(request)
 
             mock_browser.new_context.assert_called_once_with(
                 user_agent=DefaultConfig.user_agent,
@@ -303,7 +301,7 @@ class TestBraveSearch:
     @pytest.mark.asyncio
     async def test_search_exception_handling(self) -> None:
         """Test that browser is closed even when exception occurs."""
-        query = "test query"
+        request = SearchRequest(engine=self.engine.NAME, query="test query", page=1)
 
         with patch(
             "websearchapi.core.engines.brave.BrowserManager.get_browser",
@@ -318,7 +316,7 @@ class TestBraveSearch:
             mock_page.goto.side_effect = Exception("Navigation failed")
 
             with pytest.raises(Exception, match="Navigation failed"):
-                await self.engine.search(query)
+                await self.engine.search(request)
 
             mock_context.close.assert_called_once()
             mock_browser.close.assert_called_once()

@@ -25,7 +25,7 @@ async def search(request: SearchRequest) -> SearchResponse:
     """Search for a query."""
     try:
         engine = get_engine(request.engine)
-        return await engine.search(request.query, request.page)
+        return await engine.search(request)
 
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
