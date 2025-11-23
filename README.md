@@ -254,17 +254,16 @@ services:
     container_name: web-search-api
     environment:
       - API_KEY=your-secret-key
+    ports:
+      - "5000:5000"
     restart: unless-stopped
     mem_limit: 512m
     cpus: 0.5
-    stop_grace_period: 30s
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-    ports:
-      - "5000:5000"
 ```
 
 Then run:
