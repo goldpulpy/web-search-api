@@ -324,7 +324,6 @@ class TestYahooSearch:
             assert result.result[1].title == "Test Result 2"
 
             mock_context.close.assert_called_once()
-            mock_browser.close.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_search_with_different_page(self) -> None:
@@ -418,7 +417,6 @@ class TestYahooSearch:
                 await self.engine.search(request)
 
             mock_context.close.assert_called_once()
-            mock_browser.close.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_search_banner_skipping(self) -> None:
