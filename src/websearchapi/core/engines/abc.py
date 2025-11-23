@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from websearchapi.models.search import SearchResponse
+from websearchapi.models.search import SearchRequest, SearchResponse
 
 
 class Engine(ABC):
@@ -11,5 +11,5 @@ class Engine(ABC):
     NAME: str
 
     @abstractmethod
-    async def search(self, query: str, page: int = 1) -> SearchResponse:
+    async def search(self, request: SearchRequest) -> SearchResponse:
         """Search for a query."""

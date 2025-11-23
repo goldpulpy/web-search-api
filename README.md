@@ -26,6 +26,7 @@ A simple FastAPI-based web search API that scrapes search engines and returns cl
 ## Supported Search Engines
 
 - [DuckDuckGo](https://duckduckgo.com)
+- [Brave](https://search.brave.com/)
 
 ## Quick Start
 
@@ -91,7 +92,7 @@ Get list of available search engines.
 
 ```json
 {
-  "engines": ["Engine name", ...]
+  "engines": ["engine_name"]
 }
 ```
 
@@ -105,7 +106,7 @@ Search for a query using a specific search engine.
 
 ```json
 {
-  "engine": "Engine name",
+  "engine": "engine_name",
   "query": "Query to search",
   "page": 1
 }
@@ -115,16 +116,16 @@ Search for a query using a specific search engine.
 
 ```json
 {
-  "engine": "Engine name",
+  "engine": "engine_name",
   "result": [
     {
       "title": "Title of the result",
       "link": "Link to the result",
       "snippet": "Snippet of the result"
-    },
-    ...
+    }
   ],
-  "page": 1
+  "page": 1,
+  "count": 1
 }
 ```
 
@@ -253,17 +254,16 @@ services:
     container_name: web-search-api
     environment:
       - API_KEY=your-secret-key
+    ports:
+      - "5000:5000"
     restart: unless-stopped
     mem_limit: 512m
     cpus: 0.5
-    stop_grace_period: 30s
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-    ports:
-      - "5000:5000"
 ```
 
 Then run:

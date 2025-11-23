@@ -4,6 +4,6 @@ from fastapi import APIRouter
 
 from . import engine, search
 
-router = APIRouter(prefix="/v1", tags=["v1"])
+router = APIRouter(prefix="/v1")
 router.include_router(engine.router)
 router.include_router(search.router)

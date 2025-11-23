@@ -1,9 +1,10 @@
 """Engines."""
 
-from .abc import Engine
-from .duckduckgo import DuckDuckGo
+from .engines.abc import Engine
+from .engines.brave import Brave
+from .engines.duckduckgo import DuckDuckGo
 
-_engine_classes = [DuckDuckGo]
+_engine_classes = [DuckDuckGo, Brave]
 engines: dict[str, type[Engine]] = {cls.NAME: cls for cls in _engine_classes}
 
 
