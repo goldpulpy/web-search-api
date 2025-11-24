@@ -28,6 +28,7 @@ A simple FastAPI-based web search API that scrapes search engines and returns cl
 - [DuckDuckGo](https://duckduckgo.com)
 - [Brave](https://search.brave.com)
 - [Yahoo](https://search.yahoo.com)
+- [Ask](https://www.ask.com)
 
 ## Quick Start
 
