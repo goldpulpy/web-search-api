@@ -40,19 +40,22 @@ class DuckDuckGo(Engine):
         pw_page = await pw_context.new_page()
         await pw_page.add_init_script(DefaultConfig.init_script)
 
+        results = []
+
         try:
             search_url = self._build_search_url(request.query, request.page)
-            await pw_page.goto(search_url, timeout=30000)
+            response = await pw_page.goto(search_url, timeout=30000)
 
-            logger.debug("Waiting for search results to load")
-            await pw_page.wait_for_selector("div.results", timeout=10000)
+            if response and response.status == 200:  # noqa: PLR2004
+                logger.debug("Waiting for search results to load")
+                await pw_page.wait_for_selector("div.results", timeout=10000)
 
-            results = await self._parse_page(pw_page)
-            logger.info(
-                "Found %s search results for query: '%s'",
-                len(results),
-                request.query,
-            )
+                results = await self._parse_page(pw_page)
+                logger.info(
+                    "Found %s search results for query: '%s'",
+                    len(results),
+                    request.query,
+                )
 
         finally:
             logger.debug("Closing browser context")
@@ -60,6 +63,7 @@ class DuckDuckGo(Engine):
 
         return SearchResponse(
             engine=self.NAME,
+            search_url=search_url,
             result=results,
             page=request.page,
             count=len(results),

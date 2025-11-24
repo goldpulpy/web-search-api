@@ -26,7 +26,9 @@ A simple FastAPI-based web search API that scrapes search engines and returns cl
 ## Supported Search Engines
 
 - [DuckDuckGo](https://duckduckgo.com)
-- [Brave](https://search.brave.com/)
+- [Brave](https://search.brave.com)
+- [Yahoo](https://search.yahoo.com)
+- [Ask](https://www.ask.com)
 
 ## Quick Start
 
@@ -117,6 +119,7 @@ Search for a query using a specific search engine.
 ```json
 {
   "engine": "engine_name",
+  "search_url": "Search URL",
   "result": [
     {
       "title": "Title of the result",

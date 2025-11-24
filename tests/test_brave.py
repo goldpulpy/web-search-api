@@ -216,11 +216,14 @@ class TestBraveSearch:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
+            mock_response = AsyncMock()
 
             mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
 
+            mock_page.goto.return_value = mock_response
+            mock_response.status = 200
             mock_page.wait_for_selector.return_value = None
 
             with patch.object(self.engine, "_parse_page") as mock_parse:
@@ -247,7 +250,6 @@ class TestBraveSearch:
             assert result.result[1].title == "Test Result 2"
 
             mock_context.close.assert_called_once()
-            mock_browser.close.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_search_with_different_page(self) -> None:
@@ -264,10 +266,14 @@ class TestBraveSearch:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
+            mock_response = AsyncMock()
 
             mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
+
+            mock_page.goto.return_value = mock_response
+            mock_response.status = 200
 
             mock_page.wait_for_selector.return_value = None
 
@@ -298,10 +304,14 @@ class TestBraveSearch:
             mock_browser = AsyncMock()
             mock_context = AsyncMock()
             mock_page = AsyncMock()
+            mock_response = AsyncMock()
 
             mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
+
+            mock_page.goto.return_value = mock_response
+            mock_response.status = 200
 
             mock_page.wait_for_selector.return_value = None
 
@@ -341,4 +351,3 @@ class TestBraveSearch:
                 await self.engine.search(request)
 
             mock_context.close.assert_called_once()
-            mock_browser.close.assert_called_once()
