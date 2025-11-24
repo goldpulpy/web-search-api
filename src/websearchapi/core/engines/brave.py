@@ -39,17 +39,18 @@ class Brave(Engine):
 
         try:
             search_url = self._build_search_url(request.query, request.page)
-            await pw_page.goto(search_url)
+            response = await pw_page.goto(search_url)
 
-            logger.debug("Waiting for search results to load")
-            await pw_page.wait_for_selector("#results")
+            if response and response.status == 200:  # noqa: PLR2004
+                logger.debug("Waiting for search results to load")
+                await pw_page.wait_for_selector("div.results")
 
-            results = await self._parse_page(pw_page)
-            logger.info(
-                "Found %s search results for query: '%s'",
-                len(results),
-                request.query,
-            )
+                results = await self._parse_page(pw_page)
+                logger.info(
+                    "Found %s search results for query: '%s'",
+                    len(results),
+                    request.query,
+                )
 
         finally:
             logger.debug("Closing browser context and browser")

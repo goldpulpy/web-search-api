@@ -37,21 +37,24 @@ class Yahoo(Engine):
         pw_page = await pw_context.new_page()
         await pw_page.add_init_script(DefaultConfig.init_script)
 
+        results = []
+
         try:
             search_url = self._build_search_url(request.query, request.page)
-            await pw_page.goto(search_url)
+            response = await pw_page.goto(search_url)
 
-            await self._skip_banner(pw_page)
+            if response and response.status == 200:  # noqa: PLR2004
+                await self._skip_banner(pw_page)
 
-            logger.debug("Waiting for search results to load")
-            await pw_page.wait_for_selector("#web")
+                logger.debug("Waiting for search results to load")
+                await pw_page.wait_for_selector("#web")
 
-            results = await self._parse_page(pw_page)
-            logger.info(
-                "Found %s search results for query: '%s'",
-                len(results),
-                request.query,
-            )
+                results = await self._parse_page(pw_page)
+                logger.info(
+                    "Found %s search results for query: '%s'",
+                    len(results),
+                    request.query,
+                )
 
         finally:
             logger.debug("Closing browser context and browser")
