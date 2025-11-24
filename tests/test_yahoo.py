@@ -439,7 +439,6 @@ class TestYahooSearch:
             mock_page = AsyncMock()
             mock_response = AsyncMock()
 
-
             mock_get_browser.return_value = mock_browser
             mock_browser.new_context.return_value = mock_context
             mock_context.new_page.return_value = mock_page
@@ -448,7 +447,6 @@ class TestYahooSearch:
             mock_response.status = 200
 
             mock_page.wait_for_selector.return_value = None
-
 
             with patch.object(self.engine, "_parse_page") as mock_parse:
                 with patch.object(
